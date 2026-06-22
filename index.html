@@ -10,7 +10,13 @@
         h1 { margin-top: 0; color: #111; font-size: 24px; }
         .status { display: inline-block; padding: 6px 12px; border-radius: 20px; font-weight: bold; font-size: 14px; margin-bottom: 20px; }
         .status.active { background: #e6f4ea; color: #137333; }
-        .log-box { background: #1e1e1e; color: #7cfc00; padding: 15px; border-radius: 6px; font-family: monospace; font-size: 13px; min-height: 60px; overflow-y: auto; line-height: 1.6; }
+        .log-box { background: #1e1e1e; color: #7cfc00; padding: 15px; border-radius: 6px; font-family: monospace; font-size: 13px; min-height: 60px; overflow-y: auto; line-height: 1.6; margin-bottom: 20px; }
+        .btn-group { display: flex; gap: 10px; margin-bottom: 20px; }
+        button { padding: 12px 20px; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 14px; transition: background 0.2s; }
+        .btn-start { background: #1a73e8; color: white; }
+        .btn-start:hover { background: #1557b0; }
+        .btn-stop { background: #d93025; color: white; }
+        .btn-stop:hover { background: #b31412; }
         .meta { color: #666; font-size: 13px; margin-top: 20px; border-top: 1px solid #eee; padding-top: 15px; }
     </style>
 </head>
@@ -18,8 +24,12 @@
 
     <div class="card">
         <h1>🚀 Domain Warmup Status</h1>
-        <div class="status active">● System Running Automatically</div>
+        <div class="status active">● System Active</div>
         
+        <div class="btn-group">
+            <button class="btn-start" onclick="triggerWorkflow('warmup.yml')">▶ Start Warmup Now</button>
+        </div>
+
         <h3>Last Run Logs:</h3>
         <div class="log-box"></div>
 
@@ -28,5 +38,39 @@
         </div>
     </div>
 
+    <script>
+        // CONFIGURATION: Replace these with your details
+        const GITHUB_USERNAME = 'dickehebert';
+        const REPO_NAME = 'personal-domain-warmup';
+        
+        // PASTE YOUR GENERATED TOKEN BETWEEN THE QUOTES
+        const GITHUB_TOKEN = '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'; 
+
+        async function triggerWorkflow(workflowFileName) {
+            const url = `https://api.github.com/repos/${GITHUB_USERNAME}/${REPO_NAME}/actions/workflows/${workflowFileName}/dispatches`;
+            
+            try {
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${GITHUB_TOKEN}`,
+                        'Accept': 'application/vnd.github+json',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ ref: 'main' })
+                });
+
+                if (response.status === 204) {
+                    alert('🚀 Warmup workflow triggered successfully! Refresh this page in 1 minute to see the new logs.');
+                } else {
+                    const data = await response.json();
+                    alert('❌ Error: ' + data.message);
+                }
+            } catch (error) {
+                console.error('Error triggering workflow:', error);
+                alert('❌ Failed to connect to GitHub API.');
+            }
+        }
+    </script>
 </body>
 </html>
