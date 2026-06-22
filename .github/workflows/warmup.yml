@@ -2,29 +2,38 @@ name: Daily Domain Warmup
 
 on:
   schedule:
-    # Runs everyday automatically at 9:00 AM UTC (adjust to your preference)
     - cron: '0 9 * * *'
-  workflow_dispatch: # This allows you to click a button and run it manually anytime
+  workflow_dispatch:
 
 jobs:
   warm:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write # This gives GitHub permission to update your website file
     steps:
-      - name: Checkout repository code
+      - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup Node.js environment
+      - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: '20'
 
-      - name: Install Nodemailer dependency
+      - name: Install Nodemailer
         run: npm install nodemailer
 
-      - name: Execute Warmup Script
+      - name: Run Script & Update Webpage
         env:
           SMTP_HOST: ${{ secrets.SMTP_HOST }}
           SMTP_USER: ${{ secrets.SMTP_USER }}
           SMTP_PASS: ${{ secrets.SMTP_PASS }}
-          DAILY_VOLUME: "3" # Manual Control: Increase this number by 2-3 every week!
+          DAILY_VOLUME: "2"
         run: node warmup.js
+
+      - name: Commit and Push Webpage Changes
+        run: |
+          git config --global user.name "Warmup Bot"
+          git config --global user.email "bot@github.com"
+          git add index.html
+          git commit -m "Automated dashboard update [skip ci]" || exit 0
+          git push
