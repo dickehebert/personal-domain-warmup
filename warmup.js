@@ -28,9 +28,9 @@ const bodies = [
 // 3. Your pool of free seed recipient accounts (Gmail, Outlook, Yahoo)
 // Change these to the personal test accounts you have access to!
 const recipients = [
-    'your_test_gmail_1@gmail.com',
-    'your_test_gmail_2@gmail.com',
-    'your_test_outlook@outlook.com'
+    'dickehebert@gmail.com',
+    'rengarajan03@icloud.com',
+    'rengarajan03@live.com'
 ];
 
 async function runWarmup() {
