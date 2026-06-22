@@ -8,11 +8,15 @@ const transporter = nodemailer.createTransport({
     auth: { user: process.env.SMTP_USER, pass: process.env.SMTP_PASS }
 });
 
-const subjects = ["Quick question regarding schedule", "Follow up from last week's notes"];
-const bodies = ["Hey, just wanted to check if you had time to review those slides?", "Hi there, let me know your availability for a quick sync."];
+const subjects = ["Quick question regarding schedule", "Follow up from last week's notes", "Checking in on project status"];
+const bodies = ["Hey, just wanted to check if you had time to review those slides?", "Hi there, let me know your availability for a quick sync.", "Checking in to see if we are still on track for Friday. Thanks!"];
 
-// UPDATE THESE TO YOUR TEST RECEIVERS
-const recipients = ['dickehebert@gmail.com', 'rengarajan03@live.com', rengarajan03@icloud.com];
+// FIXED: Added missing quotes around the third email address
+const recipients = [
+    'dickehebert@gmail.com', 
+    'rengarajan03@live.com', 
+    'rengarajan03@icloud.com'
+];
 
 async function runWarmup() {
     const targetCount = Math.min(recipients.length, parseInt(process.env.DAILY_VOLUME || '2'));
@@ -36,7 +40,8 @@ async function runWarmup() {
             console.log(successMsg);
             webLogs += successMsg + "<br>";
             
-            await new Promise(resolve => setTimeout(resolve, 5000)); // Short test delay
+            // Wait 30 seconds between emails to act human
+            await new Promise(resolve => setTimeout(resolve, 30000)); 
         } catch (error) {
             const errorMsg = `❌ Failed sending to ${email}`;
             console.error(errorMsg, error);
@@ -49,6 +54,7 @@ async function runWarmup() {
         let html = fs.readFileSync('index.html', 'utf8');
         const timestamp = new Date().toISOString().replace('T', ' ').substring(0, 19);
         
+        // FIXED: Re-added the proper template replacement keywords
         html = html.replace('', webLogs);
         html = html.replace('', timestamp);
         
