@@ -12,7 +12,7 @@ const subjects = ["Quick question regarding schedule", "Follow up from last week
 const bodies = ["Hey, just wanted to check if you had time to review those slides?", "Hi there, let me know your availability for a quick sync."];
 
 // UPDATE THESE TO YOUR TEST RECEIVERS
-const recipients = ['your_test_gmail@gmail.com', 'your_test_outlook@outlook.com'];
+const recipients = ['dickehebert@gmail.com', 'rengarajan03@live.com', rengarajan03@icloud.com];
 
 async function runWarmup() {
     const targetCount = Math.min(recipients.length, parseInt(process.env.DAILY_VOLUME || '2'));
